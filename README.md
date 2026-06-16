@@ -25,8 +25,8 @@ The Decision Provenance Explorer solves a critical problem: **ML models make con
 | **Frontend Dashboard** | https://decision-provenance-explorer.vercel.app |
 | **API Documentation** | https://decision-provenance-api.onrender.com/docs |
 | **Health Check** | https://decision-provenance-api.onrender.com/health |
-| **Contract (Polygon Amoy)** | https://amoy.polygonscan.com/address/0x8E6e5B004818A796C8D4B098aCaD5cD86b9F4c32 |
-| **Live Anchor Transaction** | https://amoy.polygonscan.com/tx/a22f89733295a729b0d7142b49e13da49d1a6340836cde3a33d5d3be79edc7f5 |
+| **Contract (Polygon Amoy)** | https://amoy.polygonscan.com/address/0x31e8841C3511177847dbAbF289EdFC6f60CB1fb3 |
+| **Live Anchor Transaction** | https://amoy.polygonscan.com/tx/27c82e2e48cc320b54bb0961dd8926234208eb58c2418c79dd88ca72c4363e12 |
 
 ---
 
@@ -120,7 +120,7 @@ vercel --prod
 |---|---|---|
 | `VITE_API_BASE_URL` | `http://127.0.0.1:8000` | `https://api.yourdomain.com` |
 | `POKT_RPC_URL` | `https://lb.nodies.app/v2/polygon-amoy` | Same |
-| `CONTRACT_ADDRESS` | `0x8E6e5B004818A796C8D4B098aCaD5cD86b9F4c32` | Same |
+| `CONTRACT_ADDRESS` | `0x31e8841C3511177847dbAbF289EdFC6f60CB1fb3` | Same |
 | `DB_PATH` | `provenance.db` | `/data/provenance.db` |
 | `CORS_ORIGINS` | `http://localhost:5173` | `https://your-frontend.vercel.app` |
 
@@ -131,10 +131,10 @@ vercel --prod
 | Property | Value |
 |---|---|
 | **Contract** | ProvenanceRegistry |
-| **Address** | `0x8E6e5B004818A796C8D4B098aCaD5cD86b9F4c32` |
+| **Address** | `0x31e8841C3511177847dbAbF289EdFC6f60CB1fb3` |
 | **Network** | Polygon Amoy (Chain ID: 80002) |
 | **RPC** | POKT Network (`lb.nodies.app`) |
-| **Live Anchor** | [View on Polygonscan](https://amoy.polygonscan.com/tx/a22f89733295a729b0d7142b49e13da49d1a6340836cde3a33d5d3be79edc7f5) |
+| **Live Anchor** | [View on Polygonscan](https://amoy.polygonscan.com/tx/27c82e2e48cc320b54bb0961dd8926234208eb58c2418c79dd88ca72c4363e12) |
 
 ---
 
