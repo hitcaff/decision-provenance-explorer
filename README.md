@@ -221,7 +221,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## Hackathon
 
-Built for **POKT Network Build Week 1** — "Built on Pocket"
+Built for **POKT Network** — "Built on Pocket"
 
 **Team:** Hitesh Srivastava  
-**POKT Discord:** @hitesh
+**POKT Discord:** @hitcaff
