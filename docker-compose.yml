@@ -1,0 +1,44 @@
+# Decision Provenance Explorer - Docker Compose
+version: '3.8'
+
+services:
+  # Frontend - React + Vite
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_BASE_URL=http://backend:8000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - provenance-network
+
+  # Backend - FastAPI
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - POKT_RPC_URL=https://lb.nodies.app/v2/polygon-amoy
+      - CONTRACT_ADDRESS=0x8E6e5B004818A796C8D4B098aCaD5cD86b9F4c32
+      - DB_PATH=/data/provenance.db
+      - CORS_ORIGINS=http://localhost:3000
+    volumes:
+      - provenance-data:/data
+    networks:
+      - provenance-network
+
+volumes:
+  provenance-data:
+
+networks:
+  provenance-network:
+    driver: bridge
