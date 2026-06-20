@@ -35,6 +35,3 @@ include = ["decision_provenance_explorer*"]
 
 [tool.vercel]
 entrypoint = "src.decision_provenance_explorer.main:app"
-
-[tool.vercel]
-entrypoint = "src.decision_provenance_explorer.main:app"
