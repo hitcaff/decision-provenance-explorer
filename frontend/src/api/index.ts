@@ -1,10 +1,11 @@
-const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '');
+const API_BASE = (import.meta.env.VITE_API_BASE_URL ?? '').replace(/\/$/, '') + '/';
 
 async function request(path: string) {
-  const res = await fetch(`${API_BASE}${path}`);
+  const url = `${API_BASE}${path.replace(/^\//, '')}`;
+  const res = await fetch(url);
   if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(text || `Request failed: ${res.status}`);
+    const text = await res.text();
+    throw new Error(`HTTP ${res.status}: ${text}`);
   }
   return res.json();
 }
