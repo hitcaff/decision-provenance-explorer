@@ -29,30 +29,34 @@ export default function AnchorFeed() {
 
       {data && (
         <div className="space-y-3">
-          {(!data.anchors || data.anchors.length === 0) ? (
+          {(!data || data.length === 0) ? (
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-6 text-center text-slate-400">
               <Activity className="mx-auto mb-2" size={24} />
               No anchors yet.
             </div>
           ) : (
-            data.anchors.map((a: any) => (
-              <div key={a.tx_hash} className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
+            data.map((a: any, idx: number) => (
+              <div key={a.transaction_hash || idx} className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <a
-                    href={`https://amoy.polygonscan.com/tx/${a.tx_hash}`}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-xs font-mono text-primary-400 hover:underline"
-                  >
-                    {a.tx_hash?.slice(0, 10)}…
-                  </a>
-                  <span className="text-xs text-slate-400">Block {a.block_number ?? '—'}</span>
+                  {a.transaction_hash ? (
+                    <a
+                      href={`https://amoy.polygonscan.com/tx/${a.transaction_hash}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs font-mono text-primary-400 hover:underline"
+                    >
+                      {a.transaction_hash.slice(0, 10)}…
+                    </a>
+                  ) : (
+                    <span className="text-xs font-mono text-slate-500">no tx hash</span>
+                  )}
+                  <span className="text-xs text-slate-400">Block {a.block_number || '—'}</span>
                   <span className="text-xs text-slate-400">
-                    {a.anchored_at ? formatDistanceToNow(a.anchored_at) : ''}
+                    {a.timestamp ? formatDistanceToNow(new Date(a.timestamp * 1000).toISOString()) : ''}
                   </span>
                 </div>
                 <pre className="text-xs text-slate-300 bg-slate-950/60 p-3 rounded overflow-auto">
-                  {JSON.stringify({ model: a.model_id, records: a.record_count, root: a.chain_root?.slice(0, 32) }, null, 2)}
+                  {JSON.stringify({ model: a.model_id, records: a.record_count, root: a.root?.slice(0, 32) }, null, 2)}
                 </pre>
               </div>
             ))

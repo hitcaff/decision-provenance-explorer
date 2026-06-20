@@ -8,7 +8,7 @@ export default function DecisionTimeline() {
     queryFn: fetchRecords,
   });
 
-  const records = data?.records ?? [];
+  const records = data?.data ?? [];
 
   const chartData = records.map((r: any, idx: number) => ({
     index: idx + 1,

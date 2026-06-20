@@ -28,17 +28,17 @@ export default function RecordLookup() {
 
       {data && (
         <div className="space-y-4">
-          {data.records.length === 0 ? (
+          {(!data.data || data.data.length === 0) ? (
             <div className="rounded-lg border border-slate-800 bg-slate-900/50 p-6 text-center text-slate-400">
               <Shield className="mx-auto mb-2" size={24} />
               No records yet. Anchor a chain to see records here.
             </div>
           ) : (
-            data.records.map((r: any) => (
-              <div key={r.id} className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
+            data.data.map((r: any) => (
+              <div key={r.record_id} className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
                 <div className="flex flex-wrap items-center gap-2 mb-2">
                   <span className="px-2 py-1 text-xs font-mono bg-slate-800 border border-slate-700 rounded">
-                    {r.id?.slice(0, 8) ?? '—'}
+                    {r.record_id?.slice(0, 8) ?? '—'}
                   </span>
                   <span className="px-2 py-1 text-xs bg-primary-500/20 text-primary-300 border border-primary-500/30 rounded">
                     {r.label_display ?? '—'}

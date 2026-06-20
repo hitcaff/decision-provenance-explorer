@@ -161,7 +161,6 @@ vercel --prod
 | Method | Endpoint | Description |
 |---|---|---|
 | `GET` | `/config` | All config versions |
-| `GET` | `/config/current` | Active configuration |
 | `GET` | `/config/genesis` | Genesis history |
 | `GET` | `/config/label_registry` | Label ID → display mapping |
 

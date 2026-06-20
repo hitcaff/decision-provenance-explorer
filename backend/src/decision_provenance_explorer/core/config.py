@@ -33,10 +33,15 @@ class Settings(BaseSettings):
     db_path: str = "provenance.db"
 
     # POKT Network RPC
-    pokt_rpc_url: str = "https://lb.nodies.app/v2/polygon-amoy"
+    pokt_rpc_url: str = "https://poly-amoy-testnet.api.pocket.network"
 
     # Contract
     contract_address: str = "0x8E6e5B004818A796C8D4B098aCaD5cD86b9F4c32"
+
+    # Address that signs and submits anchor() transactions (derived from
+    # PROVENANCE_SIGNER_KEY at anchoring time). The registry contract indexes
+    # anchors per-sender, so reads must query by THIS address, not contract_address.
+    anchor_signer_address: str = "0x8e50426474338c47B5D4936176AD3D3Dba9261Ae"
 
     # Polygonscan API (for verification)
     polygonscan_api_key: str = ""

@@ -25,7 +25,7 @@ class ProvenanceService:
                 model_id=cfg.model_id,
                 model_version=cfg.model_version,
                 model_hash=cfg.model_hash,
-                db_path=cfg.db_path,
+                db_path=cfg.db_path or self.db_path,
                 input_schema_version=cfg.input_schema_version,
                 ipfs_anchor=cfg.ipfs_anchor,
                 pinata_jwt=cfg.pinata_jwt,
@@ -46,7 +46,7 @@ class ProvenanceService:
         return GenesisRecord(
             genesis_id=genesis.genesis_id, model_id=genesis.model_id,
             created_by=genesis.created_by, reason=genesis.reason,
-            schema_version=genesis.schema_version, timestamp_iso=genesis.timestamp_iso,
+            schema_version=genesis.schema_version, timestamp_iso=genesis.created_at,
             genesis_hash=genesis.genesis_hash,
         )
 
@@ -64,7 +64,7 @@ class ProvenanceService:
             config_id=config.config_id, model_id=config.model_id,
             config_version=config.config_version, threshold=config.threshold,
             threshold_label_id=config.threshold_label_id, changed_by=config.changed_by,
-            change_reason=config.change_reason, timestamp_iso=config.timestamp_iso,
+            change_reason=config.change_reason, timestamp_iso=config.effective_from,
         )
 
     def record_decision(self, request: RecordDecisionRequest) -> ProvenanceRecord:
@@ -75,7 +75,17 @@ class ProvenanceService:
             score=request.score,
             session_id=request.session_id,
         )
-        return ProvenanceRecord(**result)
+        # logger.record() returns a receipt (record_id, hashes, chain position, etc.)
+        # but not input_hash/output_hash/model_hash or the raw input/output values.
+        # Fetch the persisted record for the hash fields and merge in what was
+        # only known at write time (score/threshold/chain_root/raw input/output).
+        full = logger.get_record(result["record_id"]) or {}
+        return ProvenanceRecord(
+            **full,
+            **{k: v for k, v in result.items() if k not in full},
+            input_features=request.input_features,
+            output=request.output,
+        )
 
     def get_record(self, record_id: str) -> Optional[ProvenanceRecord]:
         logger = self._get_logger()
@@ -105,18 +115,30 @@ class ProvenanceService:
         )
 
     def export_eu_ai_act(self) -> EUAIActReport:
+        import tempfile
         logger = self._get_logger()
-        report = logger.export_eu_ai_act()
+        with tempfile.NamedTemporaryFile(suffix=".json", delete=False) as tmp:
+            report = logger.export_eu_ai_act(output_path=tmp.name)
+        # The library's raw dicts use created_at (genesis) / effective_from
+        # (config) — remap to timestamp_iso to match our Pydantic schemas.
+        report["genesis_history"] = [
+            {**g, "timestamp_iso": g.get("created_at", g.get("timestamp_iso", ""))}
+            for g in report.get("genesis_history", [])
+        ]
+        report["config_history"] = [
+            {**c, "timestamp_iso": c.get("effective_from", c.get("timestamp_iso", ""))}
+            for c in report.get("config_history", [])
+        ]
         return EUAIActReport(**report)
 
     def get_configs(self) -> List[ConfigRecord]:
         logger = self._get_logger()
         configs = logger.configs.all_configs(logger.model_id)
         return [ConfigRecord(
-            config_id=c.config_id, model_id=c.model_id,
-            config_version=c.config_version, threshold=c.threshold,
-            threshold_label_id=c.threshold_label_id, changed_by=c.changed_by,
-            change_reason=c.change_reason, timestamp_iso=c.timestamp_iso,
+            config_id=c["config_id"], model_id=c["model_id"],
+            config_version=c["config_version"], threshold=c["threshold"],
+            threshold_label_id=c["threshold_label_id"], changed_by=c["changed_by"],
+            change_reason=c["change_reason"], timestamp_iso=c["effective_from"],
         ) for c in configs]
 
     def get_genesis_history(self) -> List[GenesisRecord]:
@@ -125,7 +147,7 @@ class ProvenanceService:
         return [GenesisRecord(
             genesis_id=g.genesis_id, model_id=g.model_id,
             created_by=g.created_by, reason=g.reason,
-            schema_version=g.schema_version, timestamp_iso=g.timestamp_iso,
+            schema_version=g.schema_version, timestamp_iso=g.created_at,
             genesis_hash=g.genesis_hash,
         ) for g in genesis_list]
 

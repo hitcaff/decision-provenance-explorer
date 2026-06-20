@@ -8,7 +8,7 @@ export default function ConfigHistory() {
     queryFn: fetchConfigHistory,
   });
 
-  const items = data?.history ?? [];
+  const items = data ?? [];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -19,16 +19,16 @@ export default function ConfigHistory() {
       <div className="space-y-3">
         {items.length === 0 && <p className="text-slate-400">No config changes recorded.</p>}
         {items.map((c: any, idx: number) => (
-          <div key={c.id ?? idx} className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
+          <div key={c.config_id ?? idx} className="rounded-lg border border-slate-800 bg-slate-900/50 p-4">
             <div className="flex flex-wrap items-center gap-3 mb-2">
               <span className="px-2 py-1 text-xs bg-slate-800 border border-slate-700 rounded font-mono">
-                v{c.version ?? idx + 1}
+                v{c.config_version ?? idx + 1}
               </span>
               <span className="text-sm font-medium">
                 threshold {Number(c.threshold ?? 0).toFixed(2)}
               </span>
               <span className="text-xs text-slate-400">
-                {c.above_label} / {c.below_label}
+                label: {c.threshold_label_id ?? '—'}
               </span>
             </div>
             <div className="flex items-center gap-2 text-xs text-slate-400">

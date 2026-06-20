@@ -45,23 +45,23 @@ class BlockchainService:
     def get_anchor_count(self) -> int:
         if not self._connected or not self.contract:
             raise RuntimeError("Not connected to blockchain")
-        deployer = Web3.to_checksum_address(settings.contract_address)
-        count = self.contract.functions.getAnchorCount(deployer).call()
+        signer = Web3.to_checksum_address(settings.anchor_signer_address)
+        count = self.contract.functions.getAnchorCount(signer).call()
         return count
 
     def get_latest_anchor(self) -> Optional[AnchorEvent]:
         if not self._connected or not self.contract:
             raise RuntimeError("Not connected to blockchain")
         try:
-            deployer = Web3.to_checksum_address(settings.contract_address)
+            signer = Web3.to_checksum_address(settings.anchor_signer_address)
             count = self.get_anchor_count()
             if count == 0:
                 return None
             root, model_id, record_count, timestamp = self.contract.functions.getAnchor(
-                deployer, count - 1
+                signer, count - 1
             ).call()
             return AnchorEvent(
-                sender=deployer,
+                sender=signer,
                 root=root.hex() if isinstance(root, bytes) else root,
                 model_id=model_id,
                 record_count=record_count,
@@ -77,15 +77,15 @@ class BlockchainService:
         if not self._connected or not self.contract:
             raise RuntimeError("Not connected to blockchain")
         anchors = []
-        deployer = Web3.to_checksum_address(settings.contract_address)
+        signer = Web3.to_checksum_address(settings.anchor_signer_address)
         count = self.get_anchor_count()
         for i in range(count):
             try:
                 root, model_id, record_count, timestamp = self.contract.functions.getAnchor(
-                    deployer, i
+                    signer, i
                 ).call()
                 anchors.append(AnchorEvent(
-                    sender=deployer,
+                    sender=signer,
                     root=root.hex() if isinstance(root, bytes) else root,
                     model_id=model_id,
                     record_count=record_count,
@@ -101,21 +101,21 @@ class BlockchainService:
         if not self._connected or not self.contract:
             return {"verified": False, "message": "Not connected to blockchain"}
         try:
-            deployer = Web3.to_checksum_address(settings.contract_address)
+            signer = Web3.to_checksum_address(settings.anchor_signer_address)
             count = self.get_anchor_count()
             target_root = chain_root.lower()
             if not target_root.startswith("0x"):
                 target_root = "0x" + target_root
             for i in range(count - 1, -1, -1):
                 root, model_id, record_count, timestamp = self.contract.functions.getAnchor(
-                    deployer, i
+                    signer, i
                 ).call()
                 root_hex = root.hex() if isinstance(root, bytes) else root
                 if root_hex.lower() == target_root:
                     return {
                         "verified": True,
                         "anchor": AnchorEvent(
-                            sender=deployer, root=root_hex, model_id=model_id,
+                            sender=signer, root=root_hex, model_id=model_id,
                             record_count=record_count, timestamp=timestamp,
                             block_number=0, transaction_hash="",
                         ),

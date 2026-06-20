@@ -7,13 +7,10 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=http://localhost:8000
     ports:
       - "3000:3000"
-    environment:
-      - VITE_API_BASE_URL=http://backend:8000
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
     depends_on:
       - backend
     networks:
@@ -29,6 +26,7 @@ services:
     environment:
       - POKT_RPC_URL=https://lb.nodies.app/v2/polygon-amoy
       - CONTRACT_ADDRESS=0x8E6e5B004818A796C8D4B098aCaD5cD86b9F4c32
+      - ANCHOR_SIGNER_ADDRESS=0x8e50426474338c47B5D4936176AD3D3Dba9261Ae
       - DB_PATH=/data/provenance.db
       - CORS_ORIGINS=http://localhost:3000
     volumes:
