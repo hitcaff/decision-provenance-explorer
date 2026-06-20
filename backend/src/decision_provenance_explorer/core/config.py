@@ -20,7 +20,12 @@ class Settings(BaseSettings):
 
     # CORS
     cors_origins: List[str] = Field(
-        default=["http://localhost:5173", "http://127.0.0.1:5173"],
+        default=[
+            "http://localhost:5173",
+            "http://127.0.0.1:5173",
+            "https://decision-provenance-explorer-me2k.vercel.app",
+            "*",
+        ],
         description="Allowed CORS origins",
     )
 
