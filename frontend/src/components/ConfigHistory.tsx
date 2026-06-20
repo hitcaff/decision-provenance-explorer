@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { GitBranch, User } from 'lucide-react';
+import { User } from 'lucide-react';
 import { fetchConfigHistory } from '../api';
 
 export default function ConfigHistory() {

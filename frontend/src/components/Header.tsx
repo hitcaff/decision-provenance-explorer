@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { Shield } from 'lucide-react';
 
 export default function Header() {
-  const [query, setQuery] = useState('');
   return (
     <header className="border-b border-slate-800 bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
