@@ -23,7 +23,7 @@ class Settings(BaseSettings):
         default=[
             "http://localhost:5173",
             "http://127.0.0.1:5173",
-            "https://decision-provenance-explorer-fe2k.vercel.app",
+            "https://decision-provenance-explorer-me2k.vercel.app",
             "*",
         ],
         description="Allowed CORS origins",
